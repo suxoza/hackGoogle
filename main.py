@@ -44,7 +44,8 @@ class Auth:
 				self.conn.request(method, url, urllib.parse.urlencode(self._params), self._headers)
 			else:
 				self.conn.request(method, url)
-		except (http.client.RemoteDisconnected, socket.error) as e:
+		#except (http.client.RemoteDisconnected, socket.error) as e:
+		except Exception as e:
 			print("force run...", str(e), "\n")
 			self.proxy(True)
 			return self.sendRequest(method, url)
