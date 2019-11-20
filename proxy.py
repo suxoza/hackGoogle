@@ -1,22 +1,24 @@
-import http.client,  sys, urllib.request, urllib.parse, random, time, json
+import http.client, sys, urllib.request, urllib.parse, random, time, json
 from bs4 import BeautifulSoup
 
-lastTime = 0
+
 
 
 class SelfException(Exception):
 	pass
 
 
-class getGoogle:
+class getProxy:
 
-	_host 	  = "accounts.google.com"		
-	_proxyIP   = ""
-	_proxyPORT = 0
+	proxyIP    = ""
+	proxyPORT  = 0
 	_saveProxy = 300 # 5 min
 	_proxyFile = 'proxy.ip'
+	_lastProxyTime = 0
 
-	def __init__(self):
+	def __init__(self, force = False):
+		if force:
+			self.proxyToFile()
 		self.getFreshProxy()
 
 	def getFreshProxy(self):
@@ -27,19 +29,19 @@ class getGoogle:
 				json_ = json.load(r)
 				k = list(json_.keys())[0]
 				if tm - int(k) > self._saveProxy:
-					raise SelfException("get new value")
+					raise SelfException()
 				obj = json_[k]
 
 		except (SelfException, FileNotFoundError) as e:
-			print(e)
 			obj = self.proxyToFile()
 		
 
-		self._proxyIP 	= obj['ip']
-		self._proxyPORT  = obj['port']
-		print(obj)
+		self.proxyIP 	= obj['ip']
+		self.proxyPORT  = obj['port']
+		
 
 	def proxyToFile(self, getOnlyMin = True):
+		print("get new value")
 		ipList = {}
 		conn = urllib.request.Request("https://free-proxy-list.net/", headers={'User-Agent': 'Mozilla/5.0'})
 		r = urllib.request.urlopen(conn)
@@ -54,16 +56,16 @@ class getGoogle:
 				k = int(td[7].text.split(" ")[0])
 				v = {"ip": td[0].text, "port": td[1].text}
 				try:
-					ipList[k].append({"ip": td[0].text, "port": td[1].text})
+					ipList[k].append(v)
 				except Exception as e:
 					ipList[k] = [v]
 		if not len(ipList):
-			print('get to recursive...')
+			print('get recursive...')
 			return self.proxyToFile(False)
 		mn = min(ipList, key=int)
-		lastTime = int(time.time())
+		self._lastProxyTime = int(time.time())
 		returnValue = random.choice(ipList[mn])
-		obj = {lastTime: returnValue}
+		obj = {self._lastProxyTime: returnValue}
 		with open(self._proxyFile, "w") as w:
 			json.dump(obj, w)
 		return returnValue
@@ -74,12 +76,14 @@ class getGoogle:
 
 if __name__ == '__main__':
 	try:
-		getGoogle()
+		getProxy()
 	except Exception as e:
 		print(e)
-	sys.exit()
 
 
+
+
+'''
 
 conn = http.client.HTTPSConnection(proxyIP, proxyPORT)
 
@@ -123,3 +127,5 @@ for i,v in r1.headers.items():
 
 
 print(cookie)
+
+'''
