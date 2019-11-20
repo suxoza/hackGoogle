@@ -1,8 +1,11 @@
-{"flowName":"GlifWebSignIn",
-"continue":"https://accounts.google.com/ManageAccount",
-"f.req":"[\"AEThLlyB-AxAGH4LNsZbVAuYN5sP74YPHgnl2tQ46xiV4wqr0xCdg65uLQO3SpAthNKvXF99F99w4Voh3t5yDPWIyL2F005-foDWWF_OTwOkVhDGvqkSst0IcZ4UvPIzPMblnSqtYtkfMM_u2uLni9uu97_sIetkggjunN-WHMvnEHEPQWhuuJ3JpEmm6mo5o5BtPBIW8KCXIy86J26OHsHbrrJ6Chmoew\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",true]",
-"azt":"AFoagUVGMrC_8o7bUHn27FW3M6VvHg-lBA:1574264029226",
-"cookiesDisabled":"false",
-"deviceinfo":"[null,null,null,[],null,\"GE\",null,null,[],\"GlifWebSignIn\",null,[null,null,[],null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[],null,null,null,[],[]]]",
-"gmscoreversion":"undefined",
-"":""}
+{
+   "flowName":"GlifWebSignIn",
+   "flowEntry":"SignUp",
+   "continue":"https://accounts.google.com/ManageAccount",
+   "f.req":"[\"AEThLlwEqs3A4W30tDrMGoiA3bKGsP2TyHvYzs9jPMDUOrYbBY0ZUGKI4nVKnIxWIk7_CfKUL-gDTNCqL1FK-AaEOzCXp4wtEKBfPMw22O1E5z2hgZNDxMYA5Yi65_vBYIbmMixT3pqJQafPb-UNwgn1OCNv6zMFtLqb6LafK3qiTffxodVRypOPwJV7crgVf1RKZ-mfwFb2cWVx8W_n8vm_CsOFyj7qhw\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",\"someSomeName\",true]",
+   "azt":"AFoagUVMbpiba3Kv_P0brdMyElAnsFny1g:1574268157474",
+   "cookiesDisabled":"false",
+   "deviceinfo":"[null,null,null,[],null,\"GE\",null,null,[],\"GlifWebSignIn\",null,[null,null,[],null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[],null,null,null,[],[]]]",
+   "gmscoreversion":"undefined",
+   "":""
+}
