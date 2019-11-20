@@ -20,7 +20,6 @@ class parseHTML:
 		self.soup = BeautifulSoup(self.source, "html.parser")
 		self.getAzt()
 		self.getFReq()
-		print(self.params)
 
 	def getFReq(self):
 		td = self.soup.find("div", {"id":"view_container"}).attrs['data-initial-setup-data'].replace("null,",'')

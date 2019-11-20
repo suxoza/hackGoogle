@@ -16,7 +16,7 @@ class Auth:
 	_regActionUrl = "/_/signup/accountdetails?hl=ka&_reqid=70475&rt=j"
 
 	def __init__(self):
-		self.headers()
+		self.prepareRequest()
 		self.proxy()
 		
 
@@ -30,33 +30,53 @@ class Auth:
 
 	def proxy(self, force = False):
 		self._proxy = getProxy(force)
+
 		self.initConnection()
 
 
 	def initConnection(self):
-		self.conn = http.client.HTTPSConnection(self._proxy.proxyIP, self._proxy.proxyPORT, timeout = 10)
+		self.conn = http.client.HTTPSConnection(self._proxy.proxyIP, self._proxy.proxyPORT, timeout = 30)
 		self.conn.set_tunnel(self._host)
 
 	def sendRequest(self, method, url):
 		try:
-			self.conn.request(method, url, urllib.parse.urlencode(self._params), self._headers)
+			if method == 'POST':
+				self.conn.request(method, url, urllib.parse.urlencode(self._params), self._headers)
+			else:
+				self.conn.request(method, url)
 		except (http.client.RemoteDisconnected, socket.error) as e:
-			print("run to force...")
+			print("force run...", str(e), "\n")
 			self.proxy(True)
 			return self.sendRequest(method, url)
 
 
 	def registrationAction(self):
 		print("---call method: registrationAction")
-		#self._headers['Cookie'] = 'GAPS='+self._cookie['GAPS']
+		self._headers['Cookie'] = 'GAPS='+self._cookie['GAPS']
 		self._headers['Referer'] = "https://{0}{1}".format(self._host, self._regUrl)
 
-		with open('params.json') as r:
-			self._params = json.load(r)
+		postData = {
+			'name': 'someUniqueName',
+			'lastName': 'someLastName',
+			'email': 'someUniqueEmail1234',
+			'password': 'somePassword1234'
+		}
+		postData['someBoolValue'] =  bool(1)
 
+		kk = ['name','lastName','name','lastName','email','password','email', 'someBoolValue']
+		for i in kk:
+			self._params['f.req'].append(postData[i])
+		self._params['f.req'] = json.dumps(self._params['f.req'])
 
+		print(self._params['f.req'])
+		#return
 
-		self._headers['Cookie'] = 'GAPS=1:YSHVtaMjCSw7i43Yo_4tbAEL5F8yqw:5O7oHA9JWUyVxWNK'
+		print("----headers")
+		print(self._headers)
+		print('---params')
+		print(self._params)
+		print("---f.req")
+
 		self.sendRequest("POST", self._regActionUrl)	
 		r1 = self.conn.getresponse()
 		print(r1.status, r1.reason)
@@ -71,14 +91,20 @@ class Auth:
 				
 		r1 = self.conn.getresponse()
 		rdr = r1.read().decode("utf_8")
-		params = parseHTML(rdr)
-		print(params)
+		if r1.status != 200:
+			self.proxy(True)
+			return self.getRegistrationPage()
+
 		print(r1.status, r1.reason)
-		print(r1.headers)
+		
+		params = parseHTML(rdr)
+		self._params['f.req'] = params.params['f.req']
+		self._params['azt'] = params.params['azt']
+
+
+		
 		self.getCookie(r1.headers)
-		print(self._cookie)
-		for key, value in self._headers.items():
-			print(key, value)
+	
 
 		self.registrationAction()
 		#print(self._headers)
@@ -99,7 +125,17 @@ class Auth:
 	def connection(self):
 		pass
 
-	def headers(self):
+	def prepareRequest(self):
+		self._params = {
+		   "flowName":"GlifWebSignIn",
+		   "flowEntry":"SignUp",
+		   "continue":"https://accounts.google.com/ManageAccount",
+		   "cookiesDisabled":"false",
+		   "deviceinfo":"[null,null,null,[],null,\"EN\",null,null,[],\"GlifWebSignIn\",null,[null,null,[],null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,[],null,null,null,[],[]]]",
+		   "gmscoreversion":"undefined",
+		   "":""
+		}
+
 		self._headers = {
             "Accept": "*/*",
             "Accept-Language": "en-US,en;q=0.5",
