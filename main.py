@@ -1,7 +1,12 @@
-import http.client, urllib.parse, json, requests, socket
+import http.client, urllib.parse, json, requests, socket, ssl
 
 from helpers.proxy import getProxy
 from helpers.parseGoogleHtml import parseHTML
+
+try:
+	ssl._create_default_https_context = ssl._create_unverified_context
+except Exception as e:
+	print(e)
 
 
 class Auth:
@@ -14,6 +19,7 @@ class Auth:
 	conn 	 = False
 	_regUrl  = "/signup/v2?flowName=GlifWebSignIn&amp;flowEntry=SignUp"
 	_regActionUrl = "/_/signup/accountdetails?hl=ka&_reqid=70475&rt=j"
+	wichProxy = False
 
 	def __init__(self):
 		self.prepareRequest()
@@ -29,10 +35,14 @@ class Auth:
 			self.conn.close()
 
 	def proxy(self, force = False):
-		self._proxy = getProxy(force)
+		if self.wichProxy:
+			self._proxy = getProxy(force)
+			self.initConnection()
+		else:
+			self.initWithoutProxyConnection()
 
-		self.initConnection()
-
+	def initWithoutProxyConnection(self):
+		self.conn = http.client.HTTPSConnection(self._host, 443, timeout = 30)
 
 	def initConnection(self):
 		self.conn = http.client.HTTPSConnection(self._proxy.proxyIP, self._proxy.proxyPORT, timeout = 30)
